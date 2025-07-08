@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="hatGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8f9fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e9ecef;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="faceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffeaa7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Chef Hat -->
+  <ellipse cx="50" cy="25" rx="20" ry="8" fill="url(#hatGradient)" stroke="#dee2e6" stroke-width="1"/>
+  <rect x="30" y="25" width="40" height="20" fill="url(#hatGradient)" stroke="#dee2e6" stroke-width="1"/>
+  <ellipse cx="50" cy="45" rx="20" ry="8" fill="url(#hatGradient)" stroke="#dee2e6" stroke-width="1"/>
+  
+  <!-- Hat decorative lines -->
+  <line x1="35" y1="30" x2="65" y2="30" stroke="#dee2e6" stroke-width="1"/>
+  <line x1="35" y1="35" x2="65" y2="35" stroke="#dee2e6" stroke-width="1"/>
+  <line x1="35" y1="40" x2="65" y2="40" stroke="#dee2e6" stroke-width="1"/>
+  
+  <!-- Face -->
+  <circle cx="50" cy="65" r="18" fill="url(#faceGradient)" stroke="#e17055" stroke-width="1"/>
+  
+  <!-- Eyes -->
+  <circle cx="45" cy="60" r="2" fill="#2d3436"/>
+  <circle cx="55" cy="60" r="2" fill="#2d3436"/>
+  
+  <!-- Mustache -->
+  <path d="M 42 68 Q 50 72 58 68" stroke="#2d3436" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- Smile -->
+  <path d="M 44 72 Q 50 76 56 72" stroke="#e17055" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  
+  <!-- Utensils -->
+  <!-- Fork -->
+  <g transform="translate(25, 75)">
+    <rect x="0" y="0" width="2" height="15" fill="#74b9ff"/>
+    <rect x="-1" y="-2" width="1" height="4" fill="#74b9ff"/>
+    <rect x="0" y="-2" width="1" height="4" fill="#74b9ff"/>
+    <rect x="1" y="-2" width="1" height="4" fill="#74b9ff"/>
+    <rect x="2" y="-2" width="1" height="4" fill="#74b9ff"/>
+  </g>
+  
+  <!-- Spoon -->
+  <g transform="translate(73, 75)">
+    <rect x="0" y="0" width="2" height="12" fill="#fd79a8"/>
+    <ellipse cx="1" cy="-2" rx="2" ry="3" fill="#fd79a8"/>
+  </g>
+</svg>

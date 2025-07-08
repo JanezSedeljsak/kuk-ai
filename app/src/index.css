@@ -31,4 +31,32 @@
     -webkit-backdrop-filter: blur(16px);
     background: rgba(255, 255, 255, 0.1);
   }
+  
+  .recipe-card {
+    @apply bg-white/10 backdrop-blur-lg border border-white/30 rounded-xl p-6 w-full transition-all duration-300 shadow-xl;
+  }
+  
+  .section-title {
+    @apply text-lg font-semibold text-white mb-3 flex items-center;
+  }
+  
+  .section-icon {
+    @apply w-5 h-5 mr-2;
+  }
+  
+  .ingredient-item {
+    @apply text-gray-300 text-sm flex items-start;
+  }
+  
+  .instruction-item {
+    @apply text-gray-300 text-sm flex items-start;
+  }
+  
+  .instruction-number {
+    @apply bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0;
+  }
+  
+  .save-button {
+    @apply w-full py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-400/30 rounded-lg text-white transition-all duration-200 font-medium text-sm;
+  }
 }
