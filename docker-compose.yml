@@ -21,6 +21,7 @@ services:
      - /app/node_modules
     environment:
       NODE_ENV: development
+      JWT_SECRET: "test123"
       DATABASE_URL: "postgresql://postgres:example@db:5432/postgres"
     stdin_open: true
     tty: true
