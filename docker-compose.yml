@@ -21,16 +21,20 @@ services:
      - /app/node_modules
     environment:
       NODE_ENV: development
+      DATABASE_URL: "postgresql://postgres:example@db:5432/postgres"
     stdin_open: true
     tty: true
+    command: npm run dev
 
   db:
-    image: postgres
+    image: postgres:15-alpine
     restart: always
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: example
     volumes:
-      - pgdata:/var/lib/postgresql/data 
+      - pgdata_15:/var/lib/postgresql/data 
  
   adminer:
     image: adminer
@@ -39,6 +43,6 @@ services:
       - 8001:8080
  
 volumes:
-  pgdata:
+  pgdata_15:
 
   

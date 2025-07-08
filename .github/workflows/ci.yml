@@ -1,0 +1,30 @@
+name: CICD
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up docker
+        uses: docker/setup-buildx-actions@v3
+
+      - name: Build services
+        run: docker compose up -d --build 
+      
+      - name: Healthcheck
+        run: |
+          sleep 30
+          if curl -f http://localhost:3000/api/v1/health; then
+            echo "App is working..."
+          else
+            echo "Test failed"
+            docker compose logs
+            exit 1
+          fi
+      
+      - name: Cleanup
+        run: docker compose down
