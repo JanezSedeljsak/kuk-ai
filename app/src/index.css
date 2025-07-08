@@ -4,6 +4,31 @@
 
 @layer base {
   body {
-    @apply bg-gray-100 text-gray-900;
+    @apply bg-gray-900 text-white;
+  }
+  
+  * {
+    scrollbar-width: none;
+  }
+  
+  *::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .line-clamp-2 {
+    @apply overflow-hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  
+  .glass-effect {
+    @apply border border-white/20;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.1);
   }
 }
