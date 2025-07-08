@@ -1,0 +1,49 @@
+services:
+  web:
+    build: ./app
+    ports:
+      - "5180:5180"
+    environment:
+      NODE_ENV: test
+      VITE_HOST: 0.0.0.0
+    depends_on:
+      - api
+  
+  api:
+    build: ./api
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: test
+      JWT_SECRET: "test123"
+      DATABASE_URL: "postgresql://postgres:example@db:5432/postgres"
+    command: >
+      sh -c "
+        npx prisma generate &&
+        npx prisma db push &&
+        npm start
+      "
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - test_pgdata:/var/lib/postgresql/data 
+
+volumes:
+  test_pgdata:
+
+  
