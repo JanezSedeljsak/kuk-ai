@@ -12,7 +12,8 @@ function Home() {
       ingredients: ['Rice', 'Chicken'],
       instructions: ['Just do it'],
       totalTime: 20
-    })
+    });
+    setPrompt("");
   }
 
   return (
@@ -26,7 +27,7 @@ function Home() {
           </div>
         ) : (
           <div className="max-w-5xl mx-auto">
-            <RecipeCard recipe={recipe} />
+            <RecipeCard recipe={recipe} hasSave={true} />
           </div>
         )}
       </div>
