@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { login, register } from "../services/api";
+import useAuthStore from "../stores/authStore";
 
-function Header({ isLoggedIn, onLogin, onLogout }) {
+function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  
+  const { isLoggedIn, logout } = useAuthStore((state) => ({
+    isLoggedIn: state.isAuthenticated(),
+    logout: state.logout,
+  }));
 
   const handleNavigation = () => {
     if (location.pathname === "/") {
@@ -37,7 +44,7 @@ function Header({ isLoggedIn, onLogin, onLogout }) {
             )}
 
             <button
-              onClick={isLoggedIn ? onLogout : () => setShowAuthModal(true)}
+              onClick={isLoggedIn ? logout : () => setShowAuthModal(true)}
               className="px-3 py-1.5 bg-gradient-to-r from-purple-300/20 to-pink-300/20 backdrop-blur-sm border border-purple-200/30 rounded-md text-white transition-all duration-200 text-sm"
             >
               {isLoggedIn ? "Logout" : "Login"}
@@ -47,13 +54,13 @@ function Header({ isLoggedIn, onLogin, onLogout }) {
       </header>
 
       {showAuthModal && (
-        <AuthModal onClose={() => setShowAuthModal(false)} onLogin={onLogin} />
+        <AuthModal onClose={() => setShowAuthModal(false)} />
       )}
     </>
   );
 }
 
-function AuthModal({ onClose, onLogin }) {
+function AuthModal({ onClose }) {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -61,10 +68,20 @@ function AuthModal({ onClose, onLogin }) {
     password: "",
   });
 
-  const handleSubmit = (e) => {
+  const { login: setAuthUser } = useAuthStore((state) => state.login);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onLogin();
-    onClose();
+    try {
+      const response = isRegisterMode 
+        ? await register(formData)
+        : await login(formData);
+      
+      setAuthUser(response.user, response.token);
+      onClose();
+    } catch (error) {
+      console.error('Auth failed:', error);
+    }
   };
 
   const handleInputChange = (e) => {

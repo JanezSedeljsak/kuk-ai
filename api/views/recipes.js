@@ -26,3 +26,25 @@ export async function saveRecipe(req, res) {
         });
     }
 }
+
+export async function getSavedRecipes(req, res) {
+  try {
+        const recipes = await prisma.recipe.findMany({
+            where: {
+                userId: req.user.id
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+
+        res.json({
+            'recipes': recipes
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            'error': 'Something went wrong'
+        });
+    }
+}

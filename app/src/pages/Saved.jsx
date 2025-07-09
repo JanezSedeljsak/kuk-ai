@@ -1,27 +1,15 @@
+import { useState, useEffect } from "react";
 import { RecipeCard } from "../components/RecipeCard";
-
-const savedRecipes = [
-  {
-    title: "Test",
-    ingredients: ["Rice", "Chicken"],
-    instructions: ["Just do it"],
-    totalTime: 20,
-  },
-  {
-    title: "Test",
-    ingredients: ["Rice", "Chicken"],
-    instructions: ["Just do it"],
-    totalTime: 20,
-  },
-  {
-    title: "Test",
-    ingredients: ["Rice", "Chicken"],
-    instructions: ["Just do it"],
-    totalTime: 20,
-  },
-];
+import { getSavedRecipes } from "../services/api";
 
 function Saved() {
+  const [savedRecipes, setSavedRecipes] = useState([]);
+
+  useEffect(() => {
+    getSavedRecipes()
+      .then(response => setSavedRecipes(response.recipes || []))
+      .catch(error => console.error('Failed to fetch recipes:', error));
+  }, []);
   return (
     <div className="min-h-screen pt-16">
       <div className="max-w-5xl mx-auto px-6 py-4">
@@ -32,8 +20,8 @@ function Saved() {
         </div>
 
         <div className="max-w-5xl mx-auto space-y-8">
-          {savedRecipes.map((recipe, index) => (
-            <RecipeCard key={index} recipe={recipe} />
+          {savedRecipes.map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
       </div>

@@ -3,15 +3,14 @@ import { RecipeCard } from "../components/RecipeCard";
 
 function Home() {
   const [prompt, setPrompt] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [recipe, setRecipe] = useState(null);
 
   function generateRecipe() {
     setRecipe({
-      title: 'Test',
-      ingredients: ['Rice', 'Chicken'],
-      instructions: ['Just do it'],
-      totalTime: 20
+      title: 'Test Recipe Generated from AI',
+      ingredients: ['2 cups rice', '1 lb chicken breast', '1 onion diced', '2 cloves garlic'],
+      instructions: ['Cook rice according to package directions', 'Season and cook chicken', 'Sauté onion and garlic', 'Combine all ingredients'],
+      totalTime: 30
     });
     setPrompt("");
   }
