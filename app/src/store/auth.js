@@ -5,9 +5,11 @@ const useAuthStore = create(persist(
     set => ({
         user: null,
         token: null,
+        authModalVisible: false,
 
-        setAuth: (user, token) => set({ user, token }),
-        logout: () => set({ user: null, token: null }),
+        setAuth: (user, token) => set({ user, token, authModalVisible: false }),
+        logout: () => set({ user: null, token: null, authModalVisible: false }),
+        setAuthModal: (visible) => set({ authModalVisible: visible })
     }),
     {
         name: 'auth-storage'

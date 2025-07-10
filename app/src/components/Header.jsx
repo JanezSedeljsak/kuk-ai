@@ -6,11 +6,12 @@ import useAuthStore from "../store/auth";
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [showAuthModal, setShowAuthModal] = useState(false);
   
   const user = useAuthStore((state) => state.user);
   const isLoggedIn = useAuthStore((state) => !!state.user);
   const logout = useAuthStore((state) => state.logout);
+  const authModalVisible = useAuthStore(state => state.authModalVisible);
+  const setAuthModal = useAuthStore(state => state.setAuthModal);
 
   const handleNavigation = () => {
     if (location.pathname === "/") {
@@ -45,7 +46,7 @@ function Header() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={isLoggedIn ? logout : () => setShowAuthModal(true)}
+              onClick={isLoggedIn ? logout : () => setAuthModal(true)}
               className="px-3 py-1.5 bg-gradient-to-r from-purple-300/20 to-pink-300/20 backdrop-blur-sm border border-purple-200/30 rounded-md text-white transition-all duration-200 text-sm"
             >
               {isLoggedIn ? "Logout" : "Login"}
@@ -55,8 +56,8 @@ function Header() {
         </div>
       </header>
 
-      {showAuthModal ? (
-        <AuthModal onClose={() => setShowAuthModal(false)} />
+      {authModalVisible ? (
+        <AuthModal onClose={() => setAuthModal(false)} />
       ) : null}
     </>
   );
