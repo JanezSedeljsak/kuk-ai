@@ -101,7 +101,7 @@ function AuthModal({ onClose }) {
 
   return (
     <div className="fixed top-20 right-4 z-50 flex items-start justify-end">
-      <div className="bg-gray-900/95 backdrop-blur-lg border border-white/25 rounded-lg p-6 w-80">
+      <div className="bg-gray-900/95 backdrop-blur-lg border border-white/25 rounded-lg p-6 w-80 modal-slide-in">
         <div className="text-center mb-4">
           <h2 className="text-lg font-semibold text-white mb-1">
             {isRegisterMode ? "Create Account" : "Welcome Back"}
