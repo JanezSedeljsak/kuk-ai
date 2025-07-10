@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { login, register } from "../services/api";
 import useAuthStore from "../store/auth";
@@ -12,6 +12,12 @@ function Header() {
   const logout = useAuthStore((state) => state.logout);
   const authModalVisible = useAuthStore(state => state.authModalVisible);
   const setAuthModal = useAuthStore(state => state.setAuthModal);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn]);
 
   const handleNavigation = () => {
     if (location.pathname === "/") {
