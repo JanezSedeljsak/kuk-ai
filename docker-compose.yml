@@ -37,6 +37,17 @@ services:
       POSTGRES_PASSWORD: example
     volumes:
       - pgdata_15:/var/lib/postgresql/data 
+  
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ./ai:/app/ai
+      - ./ollama-models:/root/.ollama
+    restart: unless-stopped
+    entrypoint: ["/bin/bash", "-c"]
+    command: 
+      - |
+        ollama serve
  
   adminer:
     image: adminer
