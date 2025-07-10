@@ -3,16 +3,21 @@ import { RecipeCard } from "../components/RecipeCard";
 
 function Home() {
   const [prompt, setPrompt] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [recipe, setRecipe] = useState(null);
 
-  function generateRecipe() {
+  async function generateRecipe() {
+    if (!prompt.trim() || isLoading) return;
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     setRecipe({
-      title: 'Test Recipe Generated from AI',
+      title: `Test Recipe: ${prompt}`,
       ingredients: ['2 cups rice', '1 lb chicken breast', '1 onion diced', '2 cloves garlic'],
       instructions: ['Cook rice according to package directions', 'Season and cook chicken', 'Sauté onion and garlic', 'Combine all ingredients'],
       totalTime: 30
     });
     setPrompt("");
+    setIsLoading(false);
   }
 
   return (

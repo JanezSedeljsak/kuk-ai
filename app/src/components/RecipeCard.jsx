@@ -4,7 +4,7 @@ import { saveRecipe } from "../services/api";
 
 export function RecipeCard({ recipe, hasSave }) {
   const [isSaving, setIsSaving] = useState(false);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const isAuthenticated = useAuthStore((state) => !!state.user);
 
   const handleSave = async () => {
     setIsSaving(true);
