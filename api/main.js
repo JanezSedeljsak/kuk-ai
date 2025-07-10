@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { register, login } from './views/auth.js';
-import { saveRecipe } from './views/recipes.js';
+import { saveRecipe, getMyRecipes } from './views/recipes.js';
 import { jwtMiddleware } from './util.js';
 
 const app = express();
@@ -20,6 +20,7 @@ app.post("/api/v1/auth/register", register);
 app.post("/api/v1/auth/login", login);
 
 app.post("/api/v1/recipes", jwtMiddleware, saveRecipe);
+app.get("/api/v1/recipes", jwtMiddleware, getMyRecipes);
 
 app.listen(PORT, () => {
     console.log('App is running!');
