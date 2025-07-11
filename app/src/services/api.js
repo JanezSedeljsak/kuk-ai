@@ -69,3 +69,22 @@ export async function getRecipes() {
   const response = await api.get("api/v1/recipes");
   return response.data;
 }
+
+export async function generateRecipe(ingredients) {
+  const response = await api.post("api/v1/ai/generate-recipe", {
+    ingredients,
+  }, {
+    timeout: 120000,
+  });
+  return response.data;
+}
+
+export async function refineRecipe(originalRecipe, refinements) {
+  const response = await api.post("api/v1/ai/refine-recipe", {
+    original_recipe: originalRecipe,
+    refinements,
+  }, {
+    timeout: 120000,
+  });
+  return response.data;
+}

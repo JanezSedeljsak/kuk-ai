@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { RecipeCard } from "../components/RecipeCard";
+import {
+  generateRecipe as generateRecipeAPI,
+  refineRecipe as refineRecipeAPI,
+} from "../services/api";
+import { toast } from 'react-toastify';
 import Lottie from "lottie-react";
 import FryingPan from "../assets/fry.json";
 
@@ -7,6 +12,7 @@ function Home() {
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [recipe, setRecipe] = useState(null);
+  const [isRefine, setIsRefine] = useState(false);
 
   async function generateRecipe() {
     if (!prompt.trim() || isLoading) {
@@ -14,15 +20,26 @@ function Home() {
     }
 
     setIsLoading(true);
-    await new Promise(r => setTimeout(r, 10000));
-    setRecipe({
-      title: 'Test',
-      ingredients: ['Rice', 'Chicken'],
-      instructions: ['Just do it'],
-      totalTime: 20
-    });
-    setPrompt("");
-    setIsLoading(false);
+    try {
+      let response;
+      if (isRefine && recipe) {
+        response = await refineRecipeAPI(recipe, prompt.trim());
+      } else {
+        response = await generateRecipeAPI(prompt.trim());
+        setIsRefine(true);
+      }
+
+      setRecipe(response.recipe);
+      setPrompt("");
+    } catch (error) {
+      if (error.response?.status === 422) {
+        toast.error('Invalid request');
+      } else {
+        toast.error('Something went wrong');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -66,7 +83,11 @@ function Home() {
                     generateRecipe();
                   }
                 }}
-                placeholder="Enter ingredients separated by commas (e.g., chicken, garlic, rice, tomatoes)..."
+                placeholder={
+                  isRefine
+                    ? "Refine recipe (e.g., +tomato -peppers)..."
+                    : "Enter ingredients (e.g., chicken, garlic, rice)..."
+                }
                 className="w-full px-4 py-2.5 bg-white/10 backdrop-blur-lg border border-white/25 rounded-md text-white placeholder-gray-300 focus:outline-none focus:border-purple-400/50 focus:bg-white/15 transition-all duration-200 text-sm"
                 disabled={isLoading}
               />
