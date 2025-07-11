@@ -69,3 +69,10 @@ export async function getRecipes() {
   const response = await api.get("api/v1/recipes");
   return response.data;
 }
+
+export async function aiGenerateRecipe({ prompt }) {
+  const response = await api.post("api/v1/ai/generate-recipe", {
+    prompt,
+  });
+  return response.data;
+}

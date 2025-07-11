@@ -24,6 +24,7 @@ services:
       NODE_ENV: development
       JWT_SECRET: "test123"
       DATABASE_URL: "postgresql://postgres:example@db:5432/postgres"
+      OLLAMA_URL: "http://ollama:11434/"
     stdin_open: true
     tty: true
     command: npm run dev
