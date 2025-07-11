@@ -86,3 +86,98 @@ export async function generateRecipe(req, res) {
         });
     }
 }
+
+export async function refineRecipe(req, res) {
+    try {
+        const { prompt, recipe } = req.body;
+        const [refine2Add, refine2Remove] = getRefineValid(prompt);
+        if (!refine2Add.length && !refine2Remove.length) {
+            return res.status(422).json({
+                error: 'Invalid prompt'
+            });
+        }
+
+        const aiPrompt = [
+            "You are a creative professional chef. Please refine this recipe by adding and removing the specified ingredients:",
+            "",
+            `Original Recipe: ${recipe.title || 'Recipe'}`,
+            `Current Ingredients: ${(recipe.ingredients || []).join(', ')}`,
+            `Current Instructions: ${(recipe.instructions || []).join(' ')}`,
+            "",
+            "Changes to make:"
+        ];
+
+        if (refine2Add.length) {
+            aiPrompt.push(
+                `Add these ingredients: ${refine2Add.join(', ')}`
+            );
+        }
+
+        if (refine2Remove.length) {
+            aiPrompt.push(
+                `Remove these ingredients: ${refine2Remove.join(', ')}`
+            );
+        }
+
+        aiPrompt.push(
+            "",
+            "Please provide a refined recipe that incorporates these ingredient changes. Update the instructions accordingly to include the new ingredients and remove references to removed ingredients. Keep the same cooking style and overall approach.",
+            "",
+            "IMPORTANT: Format ingredients as separate items in an array, not as a single string.",
+            "",
+            "Format your response as valid JSON with this exact structure:",
+            "{",
+            '    "title": "Updated recipe name",',
+            '    "ingredients": [',
+            '        "1 cup ingredient 1",',
+            '        "2 tbsp ingredient 2",',
+            '        "Salt and pepper to taste"',
+            "    ],",
+            '    "instructions": [',
+            '        "detailed step 1",',
+            '        "detailed step 2"',
+            "    ],",
+            '    "totalTime": total_minutes',
+            "}",
+            "",
+            "Ensure the refined recipe is practical and delicious!"
+        );
+
+        const finalAiPrompt = aiPrompt.join('\n');
+        const aiResponse = await fetch(`${process.env.OLLAMA_URL}api/generate`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: process.env.OLLAMA_MODEL || 'gemma:2b',
+                prompt: finalAiPrompt,
+                stream: false,
+                format: 'json'
+            })
+        });
+
+        console.log(aiResponse);
+        if (!aiResponse.ok) {
+            const error = await aiResponse.text();
+            console.log(error);
+            throw new Error(error);
+        }
+
+        const responseData = await aiResponse.json();
+        const aiRecipe = parseAIResponse(responseData.response);
+        if (!aiRecipe) {
+            const jsonString = JSON.stringify(responseData.response);
+            throw new Error(`Failed to parse response, ${jsonString}`);
+        }
+
+        res.json({
+            recipe: recipe,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            'error': 'Something went wrong'
+        });
+    }
+}

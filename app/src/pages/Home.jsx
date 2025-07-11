@@ -2,13 +2,14 @@ import { useState } from "react";
 import { RecipeCard } from "../components/RecipeCard";
 import Lottie from "lottie-react";
 import FryingPan from "../assets/fry.json";
-import { aiGenerateRecipe } from "../services/api";
+import { aiGenerateRecipe, aiRefineRecipe } from "../services/api";
 import { toast as zapecenToast } from 'react-toastify';
 
 function Home() {
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [recipe, setRecipe] = useState(null);
+  const [isRefine, setIsRefine] = useState(false);
 
   async function generateRecipe() {
     if (!prompt.trim() || isLoading) {
@@ -17,9 +18,18 @@ function Home() {
 
     setIsLoading(true);
     try {
-      const aiResponse = await aiGenerateRecipe({
-        prompt: prompt.trim()
-      });
+      let aiResponse;
+      if (isRefine && recipe) {
+        aiResponse = await aiRefineRecipe({
+          prompt: prompt.trim(),
+          recipe
+        });
+      } else {
+        aiResponse = await aiGenerateRecipe({
+          prompt: prompt.trim()
+        });
+      }
+      setIsRefine(true);
       setRecipe(aiResponse.recipe);
     } catch (error) {
       if (error.response?.status == 422) {
@@ -74,7 +84,11 @@ function Home() {
                     generateRecipe();
                   }
                 }}
-                placeholder="Enter ingredients separated by commas (e.g., chicken, garlic, rice, tomatoes)..."
+                placeholder={
+                  isRefine 
+                  ? "Refine recipe (e.g., +tomato, -mango)..."
+                  : "Enter ingredients separated by commas (e.g., chicken, garlic, rice, tomatoes)..."
+                }
                 className="w-full px-4 py-2.5 bg-white/10 backdrop-blur-lg border border-white/25 rounded-md text-white placeholder-gray-300 focus:outline-none focus:border-purple-400/50 focus:bg-white/15 transition-all duration-200 text-sm"
                 disabled={isLoading}
               />
