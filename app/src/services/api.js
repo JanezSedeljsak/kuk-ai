@@ -73,6 +73,8 @@ export async function getRecipes() {
 export async function aiGenerateRecipe({ prompt }) {
   const response = await api.post("api/v1/ai/generate-recipe", {
     prompt,
+  }, {
+    timeout: 120000,
   });
   return response.data;
 }
