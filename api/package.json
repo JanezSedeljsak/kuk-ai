@@ -2,21 +2,21 @@
   "name": "api",
   "version": "1.0.0",
   "description": "KukAI API",
-  "main": "main.js",
+  "main": "main.ts",
   "type": "module",
   "scripts": {
-    "start": "node main.js",
-    "dev": "nodemon main.js"
+    "start": "bun run main.ts",
+    "dev": "bun --watch main.ts",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^6.11.1",
-    "bcryptjs": "^3.0.2",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2"
+    "hono": "^4.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2",
-    "prisma": "^6.11.1"
+    "@types/node": "^20.0.0",
+    "@types/bun": "^1.0.0",
+    "prisma": "^6.11.1",
+    "typescript": "^5.0.0"
   }
 }

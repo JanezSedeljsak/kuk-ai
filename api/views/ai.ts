@@ -1,14 +1,15 @@
-import { getGenerateValid, getRefineValid, parseAIResponse } from "../validations.js";
+import { Context } from 'hono';
+import { getGenerateValid, getRefineValid, parseAIResponse } from "../validations.ts";
 
-export async function generateRecipe(req, res) {
+export async function generateRecipe(c: Context) {
     try {
-        const { prompt } = req.body;
-        console.log(req.body);
+        const { prompt } = await c.req.json();
+        console.log(await c.req.json());
         const recipeIngredients = getGenerateValid(prompt);
         if (!recipeIngredients.length) {
-            return res.status(422).json({
+            return c.json({
                 error: 'Invalid prompt'
-            });
+            }, 422);
         }
 
         const aiPrompt = `You are a creative professional chef. Create an exciting and detailed recipe using these main ingredients: ${recipeIngredients.join(', ')}.
@@ -72,26 +73,26 @@ Make this recipe memorable and delicious!`;
             throw new Error(`Failed to parse response, ${jsonString}`);
         }
 
-        res.json({
+        return c.json({
             recipe: recipe,
             usedIngredients: recipeIngredients
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return c.json({
             'error': 'Something went wrong'
-        });
+        }, 500);
     }
 }
 
-export async function refineRecipe(req, res) {
+export async function refineRecipe(c: Context) {
     try {
-        const { prompt, recipe } = req.body;
+        const { prompt, recipe } = await c.req.json();
         const [refine2Add, refine2Remove] = getRefineValid(prompt);
         if (!refine2Add.length && !refine2Remove.length) {
-            return res.status(422).json({
+            return c.json({
                 error: 'Invalid prompt'
-            });
+            }, 422);
         }
 
         let aiPrompt = `You are a creative professional chef. Please refine this recipe by adding and removing the specified ingredients:
@@ -158,13 +159,13 @@ Ensure the refined recipe is practical and delicious!`;
             throw new Error(`Failed to parse response, ${jsonString}`);
         }
 
-        res.json({
+        return c.json({
             recipe: aiRecipe,
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
+        return c.json({
             'error': 'Something went wrong'
-        });
+        }, 500);
     }
 }

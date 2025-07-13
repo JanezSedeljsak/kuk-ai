@@ -1,53 +1,57 @@
-import { prisma } from "../util.js";
+import { Context } from 'hono';
+import { prisma } from "../util.ts";
 
-export async function saveRecipe(req, res) {
+export async function saveRecipe(c: Context) {
   try {
-    const { title, ingredients, instructions, totalTime } = req.body;
+    const { title, ingredients, instructions, totalTime } = await c.req.json();
+    const user = c.get('jwtPayload');
+    
     const recipe = await prisma.recipe.create({
       data: {
         title,
         ingredients,
         instructions,
         totalTime,
-        userId: req.user.id,
+        userId: user.userId,
       },
     });
 
     if (recipe) {
-      res.json({
+      return c.json({
         message: "Recipe saved",
       });
     } else {
-      res.status(500).json({
+      return c.json({
         error: "Recipe failed to save",
-      });
+      }, 500);
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return c.json({
       error: "Something went wrong",
-    });
+    }, 500);
   }
 }
 
-export async function getMyRecipes(req, res) {
+export async function getMyRecipes(c: Context) {
   try {
+    const user = c.get('jwtPayload');
     const recipes = await prisma.recipe.findMany({
       where: {
-        userId: req.user.id,
+        userId: user.userId,
       },
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    res.json({
+    return c.json({
       recipes: recipes,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return c.json({
       error: "Something went wrong",
-    });
+    }, 500);
   }
 }

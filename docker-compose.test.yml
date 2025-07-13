@@ -19,9 +19,9 @@ services:
       DATABASE_URL: "postgresql://postgres:example@db:5432/postgres"
     command: >
       sh -c "
-        npx prisma generate &&
-        npx prisma db push &&
-        npm start
+        bunx prisma generate &&
+        bunx prisma db push &&
+        bun start
       "
     depends_on:
       db:

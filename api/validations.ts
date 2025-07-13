@@ -26,13 +26,13 @@ export const VALID_INGREDIENTS = [
   "sesame seeds", "chia seeds", "flax seeds"
 ];
 
-export function filterValidIngredients(ingredients) {
+export function filterValidIngredients(ingredients: string[]): string[] {
     return ingredients.map(ing => ing.toLowerCase().trim())
         .filter(ing => VALID_INGREDIENTS.includes(ing))
         .slice(0, 10);
 }
 
-export function getGenerateValid(prompt) {
+export function getGenerateValid(prompt: string): string[] {
     if (!prompt.trim()) {
         return [];
     }
@@ -49,9 +49,9 @@ export function getGenerateValid(prompt) {
     return validIngredients;
 }
 
-export function getRefineValid(prompt) {
+export function getRefineValid(prompt: string): [string[], string[]] {
     if (!prompt.trim()) {
-        return [];
+        return [[], []];
     }
 
     const ingredients = prompt.split(',')
@@ -59,7 +59,7 @@ export function getRefineValid(prompt) {
         .filter(ing => ing.length > 3);
     
     if (!ingredients.length) {
-        return [];
+        return [[], []];
     }
  
     const ingredients2Add = ingredients.filter(ing => ing[0] == '+')
@@ -73,7 +73,14 @@ export function getRefineValid(prompt) {
     return [validIngredients2Add, validIngredients2Remove];
 }
 
-export function parseAIResponse(text) {
+interface Recipe {
+    title: string;
+    ingredients: string[];
+    instructions: string[];
+    totalTime: number;
+}
+
+export function parseAIResponse(text: string): Recipe | null {
     if (!text.trim()) {
         return null;
     }
@@ -105,6 +112,3 @@ export function parseAIResponse(text) {
 
     return null;
 }
-
-
-

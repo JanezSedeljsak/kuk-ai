@@ -27,7 +27,7 @@ services:
       OLLAMA_URL: "http://ollama:11434/"
     stdin_open: true
     tty: true
-    command: npm run dev
+    command: bun run dev
 
   db:
     image: postgres:15-alpine
